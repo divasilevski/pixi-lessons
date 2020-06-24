@@ -101,7 +101,7 @@ module.exports = {
   context: path.resolve(__dirname, "src"), // Start directory for webpack
   mode: "development",
   entry: { 
-    main: ["@babel/polyfill", "./index.ts"]
+    main: ["@babel/polyfill", "./index.js"]
   },
 
   output: {
