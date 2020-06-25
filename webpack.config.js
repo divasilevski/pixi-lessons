@@ -114,6 +114,8 @@ module.exports = {
     hot: isDev
   },
 
+  devtool: isDev ? "source-map" : "",
+
   optimization: optimization(),
 
   resolve: {
