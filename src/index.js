@@ -8,40 +8,66 @@ Test.sayHello();
 
 ////////
 import * as PIXI from 'pixi.js';
-import image from "./assets/bg_grass.jpg";
+import Keyboard from 'pixi.js-keyboard';
+import Mouse from 'pixi.js-mouse';
+import bunnnyImage from "./assets/bunny.png";
 
-const app = new PIXI.Application({
-    width: 800, height: 600, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
-});
+const app = new PIXI.Application({ backgroundColor: 0x1099bb });
 document.body.appendChild(app.view);
 
-app.loader
-    .add('bg_grass', image)
-    .load(build);
+const bunny = PIXI.Sprite.from(bunnnyImage);
 
-function build() {
-    // Create a new texture
-    const texture = app.loader.resources.bg_grass.texture;
+bunny.anchor.set(0.5);
 
-    // Create the simple plane
-    const verticesX = 10;
-    const verticesY = 10;
-    const plane = new PIXI.SimplePlane(texture, verticesX, verticesY);
+bunny.x = app.screen.width / 2;
+bunny.y = app.screen.height / 2;
 
-    plane.x = 100;
-    plane.y = 100;
+app.stage.addChild(bunny);
 
-    app.stage.addChild(plane);
+app.ticker.add((delta) => {
+  const speed = 5 * delta;
 
-    // Get the buffer for vertice positions.
-    const buffer = plane.geometry.getBuffer('aVertexPosition');
+  if (Keyboard.isKeyDown('ArrowLeft', 'KeyA'))
+    bunny.x -= speed;
+  if (Keyboard.isKeyDown('ArrowRight', 'KeyD'))
+    bunny.x += speed;
 
-    // Listen for animate update
-    app.ticker.add((delta) => {
-        // Randomize the vertice positions a bit to create movement.
-        for (let i = 0; i < buffer.data.length; i++) {
-            buffer.data[i] += (Math.random() - 0.5);
-        }
-        buffer.update();
-    });
+  if (Keyboard.isKeyDown('ArrowUp', 'KeyW'))
+    bunny.y -= speed;
+  if (Keyboard.isKeyDown('ArrowDown', 'KeyS'))
+    bunny.y += speed;
+
+    bunny.rotation = getAngleTo(Mouse.getPosX(), Mouse.getPosY(),  bunny.x,  bunny.y);
+  
+  if (Mouse.isButtonDown(Mouse.Button.LEFT)) {
+    bunny.x += getAngleX(speed,  bunny.rotation);
+    bunny.y += getAngleY(speed,  bunny.rotation);
+  }
+  if (Mouse.isButtonDown(Mouse.Button.RIGHT)) {
+    bunny.x -= getAngleX(speed,  bunny.rotation);
+    bunny.y -= getAngleY(speed,  bunny.rotation);
+  }
+
+  Keyboard.update();
+  Mouse.update();
+
+  
+});
+
+
+function getAngleTo(mx, my, px, py) {
+  var self = this;
+  var distX = my - py;
+  var distY = mx - px;
+  var angle = Math.atan2(distX, distY);
+  //var degrees = angle * 180/ Math.PI;
+  return angle;
+}
+ 
+function getAngleX(length, angle) {
+    return Math.cos(angle) * length;
+}
+ 
+function getAngleY(length, angle) {
+    return Math.sin(angle) * length;
 }
