@@ -119,7 +119,7 @@ module.exports = {
   optimization: optimization(),
 
   resolve: {
-    extensions: [".js", ".ts",".json", ".png"], // Without ending in path
+    extensions: [".js", ".ts"], // Without ending in path
     alias: {
       "@models": path.resolve(__dirname, "src/models"), // Add @lias path
       "@": path.resolve(__dirname, "src"),

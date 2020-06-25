@@ -8,32 +8,40 @@ Test.sayHello();
 
 ////////
 import * as PIXI from 'pixi.js';
+import image from "./assets/bg_grass.jpg";
 
-const app = new PIXI.Application({ backgroundColor: 0x1099bb });
+const app = new PIXI.Application({
+    width: 800, height: 600, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
+});
 document.body.appendChild(app.view);
 
-// create a new Sprite from an image path
-import bunnyImage from "./assets/bunny.png"; // maybe path ?
+app.loader
+    .add('bg_grass', image)
+    .load(build);
 
-const bunny = PIXI.Sprite.from(bunnyImage);
+function build() {
+    // Create a new texture
+    const texture = app.loader.resources.bg_grass.texture;
 
-// center the sprite's anchor point
-bunny.anchor.set(0.5);
+    // Create the simple plane
+    const verticesX = 10;
+    const verticesY = 10;
+    const plane = new PIXI.SimplePlane(texture, verticesX, verticesY);
 
-// move the sprite to the center of the screen
-bunny.x = app.screen.width / 2;
-bunny.y = app.screen.height / 2;
+    plane.x = 100;
+    plane.y = 100;
 
-app.stage.addChild(bunny);
+    app.stage.addChild(plane);
 
-// Listen for animate update
-app.ticker.add((delta) => {
-    // just for fun, let's rotate mr rabbit a little
-    // delta is 1 if running at 100% performance
-    // creates frame-independent transformation
-    bunny.rotation += 0.1 * delta;
-});
+    // Get the buffer for vertice positions.
+    const buffer = plane.geometry.getBuffer('aVertexPosition');
 
-
-
-
+    // Listen for animate update
+    app.ticker.add((delta) => {
+        // Randomize the vertice positions a bit to create movement.
+        for (let i = 0; i < buffer.data.length; i++) {
+            buffer.data[i] += (Math.random() - 0.5);
+        }
+        buffer.update();
+    });
+}
