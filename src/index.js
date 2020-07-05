@@ -12,7 +12,19 @@ import Keyboard from 'pixi.js-keyboard';
 import Mouse from 'pixi.js-mouse';
 import bunnnyImage from "./assets/bunny.png";
 
-const app = new PIXI.Application({ backgroundColor: 0x1099bb });
+let app;
+
+window.addEventListener("resize", resize);
+
+function resize() {
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+}
+
+
+app = new PIXI.Application({ backgroundColor: 0x1099bb });
+
+resize()
+
 document.body.appendChild(app.view);
 
 const bunny = PIXI.Sprite.from(bunnnyImage);
@@ -37,21 +49,21 @@ app.ticker.add((delta) => {
   if (Keyboard.isKeyDown('ArrowDown', 'KeyS'))
     bunny.y += speed;
 
-    bunny.rotation = getAngleTo(Mouse.getPosX(), Mouse.getPosY(),  bunny.x,  bunny.y);
-  
+  bunny.rotation = getAngleTo(Mouse.getPosX(), Mouse.getPosY(), bunny.x, bunny.y);
+
   if (Mouse.isButtonDown(Mouse.Button.LEFT)) {
-    bunny.x += getAngleX(speed,  bunny.rotation);
-    bunny.y += getAngleY(speed,  bunny.rotation);
+    bunny.x += getAngleX(speed, bunny.rotation);
+    bunny.y += getAngleY(speed, bunny.rotation);
   }
   if (Mouse.isButtonDown(Mouse.Button.RIGHT)) {
-    bunny.x -= getAngleX(speed,  bunny.rotation);
-    bunny.y -= getAngleY(speed,  bunny.rotation);
+    bunny.x -= getAngleX(speed, bunny.rotation);
+    bunny.y -= getAngleY(speed, bunny.rotation);
   }
 
   Keyboard.update();
   Mouse.update();
 
-  
+
 });
 
 
@@ -63,11 +75,11 @@ function getAngleTo(mx, my, px, py) {
   //var degrees = angle * 180/ Math.PI;
   return angle;
 }
- 
+
 function getAngleX(length, angle) {
-    return Math.cos(angle) * length;
+  return Math.cos(angle) * length;
 }
- 
+
 function getAngleY(length, angle) {
-    return Math.sin(angle) * length;
+  return Math.sin(angle) * length;
 }
