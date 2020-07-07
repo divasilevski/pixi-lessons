@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
 import Mouse from 'pixi.js-mouse';
-import bunnnyImage from "../assets/bunny.png";
+import TextureLoader from "./TextureLoader"
+
+// console.log(bunnnyImage)
 
 export default class Game {
   app: PIXI.Application;
@@ -11,8 +13,7 @@ export default class Game {
   }
 
   showBunny(): void {
-
-    const bunny = PIXI.Sprite.from(bunnnyImage);
+    const bunny = PIXI.Sprite.from(TextureLoader('bunny'));
 
     bunny.anchor.set(0.5);
 
