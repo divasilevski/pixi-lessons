@@ -14,33 +14,52 @@ export default class Game {
 
   showDude(): void {
     const loader = PIXI.Loader.shared
-    
+
 
     loader.add(TextureLoader('dude')).load(() => {
 
-      let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
-      texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
-      console.log()
 
-      let rectangle = new PIXI.Rectangle(0, 0, texture.baseTexture.width / 7, texture.baseTexture.height / 4)
+
+      let textureArray = []
+      for (let i = 0; i < 4; i++) {
+        let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
+        
+        texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
+
+        let rectangle = new PIXI.Rectangle(
+          texture.baseTexture.width / 7 * i,
+          texture.baseTexture.height / 4 * 1,
+          texture.baseTexture.width / 7,
+          texture.baseTexture.height / 4
+        )
+
+        textureArray.push(new PIXI.Texture(texture.baseTexture, rectangle))
+      }
       
-      texture.frame = rectangle
-
-      const dude = new PIXI.Sprite(texture)
+      const dude = new PIXI.AnimatedSprite(textureArray)
 
       dude.roundPixels = true
       dude.scale.set(5, 5)
+      dude.animationSpeed = 0.1
 
       dude.x = this.app.screen.width / 2
       dude.y = this.app.screen.height / 2
 
+      dude.play()
+
+      console.log(dude.playing)
       this.app.stage.addChild(dude)
 
       this.app.renderer.render(this.app.stage)
+
+      this.app.ticker.add(delta => {
+
+      });
     })
+
   }
 
-  
+
   showBunny(): void {
     const bunny = PIXI.Sprite.from(TextureLoader('bunny'));
 
