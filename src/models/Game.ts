@@ -12,6 +12,35 @@ export default class Game {
     this.app = app;
   }
 
+  showDude(): void {
+    const loader = PIXI.Loader.shared
+    
+
+    loader.add(TextureLoader('dude')).load(() => {
+
+      let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
+      texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
+      console.log()
+
+      let rectangle = new PIXI.Rectangle(0, 0, texture.baseTexture.width / 7, texture.baseTexture.height / 4)
+      
+      texture.frame = rectangle
+
+      const dude = new PIXI.Sprite(texture)
+
+      dude.roundPixels = true
+      dude.scale.set(5, 5)
+
+      dude.x = this.app.screen.width / 2
+      dude.y = this.app.screen.height / 2
+
+      this.app.stage.addChild(dude)
+
+      this.app.renderer.render(this.app.stage)
+    })
+  }
+
+  
   showBunny(): void {
     const bunny = PIXI.Sprite.from(TextureLoader('bunny'));
 

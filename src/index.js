@@ -20,6 +20,8 @@ function resize() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 }
 
+
+
 app = new PIXI.Application({ backgroundColor: 0x1099bb });
 
 resize()
@@ -27,4 +29,4 @@ resize()
 document.body.appendChild(app.view);
 
 const game = new Game(app);
-game.showBunny();
+game.showDude();
