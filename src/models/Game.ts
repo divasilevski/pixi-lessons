@@ -18,25 +18,24 @@ export default class Game {
 
     loader.add(TextureLoader('dude')).load(() => {
 
+      let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
+      texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
 
+      const w: number = texture.baseTexture.width / 7
+      const h: number = texture.baseTexture.height / 4
 
-      let textureArray = []
+      let stateArray = []
+      let runArray = []
       for (let i = 0; i < 4; i++) {
-        let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
-        
-        texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
 
-        let rectangle = new PIXI.Rectangle(
-          texture.baseTexture.width / 7 * i,
-          texture.baseTexture.height / 4 * 1,
-          texture.baseTexture.width / 7,
-          texture.baseTexture.height / 4
-        )
+        let rectangle1 = new PIXI.Rectangle(w * i, h * 2, w, h)
+        let rectangle2 = new PIXI.Rectangle(w * i, h * 1, w, h)
 
-        textureArray.push(new PIXI.Texture(texture.baseTexture, rectangle))
+        runArray.push(new PIXI.Texture(texture.baseTexture, rectangle1))
+        stateArray.push(new PIXI.Texture(texture.baseTexture, rectangle2))
       }
-      
-      const dude = new PIXI.AnimatedSprite(textureArray)
+
+      const dude = new PIXI.AnimatedSprite(stateArray)
 
       dude.roundPixels = true
       dude.scale.set(5, 5)
@@ -46,14 +45,50 @@ export default class Game {
       dude.y = this.app.screen.height / 2
 
       dude.play()
+      let state: boolean[] = [true, false, false]
 
-      console.log(dude.playing)
       this.app.stage.addChild(dude)
-
       this.app.renderer.render(this.app.stage)
 
       this.app.ticker.add(delta => {
+        const speed = 5 * delta;
 
+        if (Keyboard.isKeyDown('ArrowRight', 'KeyD')) {
+          if (!state[1]) {
+            dude.textures = runArray;
+            dude.play()
+            state[0] = false;
+            state[1] = true;
+            state[2] = false;
+            dude.animationSpeed = 0.2
+          }
+
+          dude.x += speed;
+
+        } else if (Keyboard.isKeyDown('ArrowLeft', 'KeyA')) {
+          if (!state[2]) {
+            dude.textures = runArray;
+            dude.play()
+            state[0] = false;
+            state[1] = false;
+            state[2] = true;
+            dude.animationSpeed = 0.2
+          }
+          
+          dude.x -= speed;
+
+        } else {
+          if (!state[0]){
+            dude.textures = stateArray;
+            dude.play();
+            state[0] = true;
+            state[1] = false;
+            state[2] = false;
+            dude.animationSpeed = 0.1
+          }
+        }        
+
+        Keyboard.update();
       });
     })
 
