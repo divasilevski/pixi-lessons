@@ -49,7 +49,7 @@ export default class Game {
 
       this.app.stage.addChild(dude)
       this.app.renderer.render(this.app.stage)
-
+      dude.anchor.x = 0.5; 
       this.app.ticker.add(delta => {
         const speed = 5 * delta;
 
@@ -61,6 +61,8 @@ export default class Game {
             state[1] = true;
             state[2] = false;
             dude.animationSpeed = 0.2
+
+            if (dude.scale.x < 0) dude.scale.x *= -1;
           }
 
           dude.x += speed;
@@ -73,6 +75,8 @@ export default class Game {
             state[1] = false;
             state[2] = true;
             dude.animationSpeed = 0.2
+            
+            if (dude.scale.x > 0) dude.scale.x *= -1;
           }
           
           dude.x -= speed;
@@ -85,6 +89,7 @@ export default class Game {
             state[1] = false;
             state[2] = false;
             dude.animationSpeed = 0.1
+
           }
         }        
 
