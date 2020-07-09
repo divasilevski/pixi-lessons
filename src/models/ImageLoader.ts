@@ -4,26 +4,10 @@ interface JSON {
   [key: string]: string;
 }
 
-export default class ImageLoader {
-  static loadFrom(links: JSON, callback?: () => any): void {
+export default function ImageLoader(links: JSON): void {
+  const loader: PIXI.Loader = PIXI.Loader.shared;
 
-    const keys: Array<string> = Object.keys(links);
-    const loader: PIXI.Loader = PIXI.Loader.shared;
-    const count: number = keys.length - 1;
-
-    let source: string;
-    let img: HTMLImageElement;
-
-    keys.forEach((key, index) => {
-      source = links[key];
-
-      img = document.createElement('img');
-      img.src = source + '?' + Math.random();
-
-      loader.add(key, source);
-
-      if (callback && index === count) callback();
-      
-    })
-  }
+  Object.keys(links).forEach(key => {
+    loader.add(key, links[key]);
+  })
 }
