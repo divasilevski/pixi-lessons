@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
 import Mouse from 'pixi.js-mouse';
-import TextureLoader from "./TextureLoader"
 
 // console.log(bunnnyImage)
 
@@ -15,10 +14,11 @@ export default class Game {
   showDude(): void {
     const loader = PIXI.Loader.shared
 
+    loader.load(() => {
 
-    loader.add(TextureLoader('dude')).load(() => {
+      console.log(loader);
 
-      let texture = PIXI.Loader.shared.resources[TextureLoader('dude')].texture
+      let texture = PIXI.Loader.shared.resources['dude'].texture
       texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
 
       const w: number = texture.baseTexture.width / 7
@@ -49,7 +49,7 @@ export default class Game {
 
       this.app.stage.addChild(dude)
       this.app.renderer.render(this.app.stage)
-      dude.anchor.x = 0.5; 
+      dude.anchor.x = 0.5;
       this.app.ticker.add(delta => {
         const speed = 5 * delta;
 
@@ -75,14 +75,14 @@ export default class Game {
             state[1] = false;
             state[2] = true;
             dude.animationSpeed = 0.2
-            
+
             if (dude.scale.x > 0) dude.scale.x *= -1;
           }
-          
+
           dude.x -= speed;
 
         } else {
-          if (!state[0]){
+          if (!state[0]) {
             dude.textures = stateArray;
             dude.play();
             state[0] = true;
@@ -91,13 +91,14 @@ export default class Game {
             dude.animationSpeed = 0.1
 
           }
-        }        
+        }
 
         Keyboard.update();
       });
     })
 
   }
+
 
 
   showBunny(): void {

@@ -9,6 +9,14 @@ Test.sayHello();
 import Game from "./models/Game";
 
 
+//////////
+import json from "./assets/textures.json";
+import ImageLoader from "./models/ImageLoader";
+ImageLoader.loadFrom(json, () => {
+    console.log("Image has been load.")
+});
+
+
 ////////
 import * as PIXI from 'pixi.js';
 
@@ -29,4 +37,5 @@ resize()
 document.body.appendChild(app.view);
 
 const game = new Game(app);
+
 game.showDude();
