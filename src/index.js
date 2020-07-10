@@ -1,23 +1,19 @@
 // Connect styles
 import "./styles/scss.scss"
-
-// Connect libs
-
-import Test from "./models/Test";
-Test.sayHello();
-
-import Game from "./models/Game";
-
-
-//////////
-import json from "./assets/textures.json";
-import ImageLoader from "./models/ImageLoader";
-ImageLoader(json);
-
-
-////////
 import * as PIXI from 'pixi.js';
 
+import Dude from "./models/Dude";
+import Bunny from "./models/Bunny";
+
+// load resurses
+import ImageLoader from "./models/ImageLoader";
+
+ImageLoader({
+    "bunny": "https://i.ibb.co/Njr5j9m/bunny.png",
+    "dude": "https://i.ibb.co/mDMKpQx/pixeldude.png"
+});
+
+// Create PIXI application
 let app;
 
 window.addEventListener("resize", resize);
@@ -26,14 +22,11 @@ function resize() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 }
 
-
-
 app = new PIXI.Application({ backgroundColor: 0x1099bb });
 
 resize()
 
 document.body.appendChild(app.view);
 
-const game = new Game(app);
-
-game.showDude();
+// PIXI.Loader.shared.load(() => Bunny(app))
+PIXI.Loader.shared.load(() => Dude(app))
