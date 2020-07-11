@@ -1,6 +1,7 @@
 import Keyboard from 'pixi.js-keyboard';
 import * as PIXI from 'pixi.js';
 
+import GameBody from './GameBody'
 
 export default function Dude(app: PIXI.Application): void {
 
@@ -23,21 +24,12 @@ export default function Dude(app: PIXI.Application): void {
   }
 
   // Create player
-  const player: PIXI.AnimatedSprite = new PIXI.AnimatedSprite(idleAnimationArray);
+  const player: GameBody = new GameBody(idleAnimationArray, app);
+  player.animationSpeed = 0.1;
 
-  player.roundPixels = true
-  player.scale.set(5, 5)
-  player.animationSpeed = 0.1
 
-  player.x = app.screen.width / 2
-  player.y = app.screen.height / 2
-
-  player.play()
   let state: boolean[] = [true, false, false]
 
-  app.stage.addChild(player)
-  app.renderer.render(app.stage)
-  player.anchor.x = 0.5;
   app.ticker.add(delta => {
     const speed = 5 * delta;
 
