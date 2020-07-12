@@ -3,7 +3,8 @@ import * as PIXI from 'pixi.js';
 interface IAnimations {
   [key: string]: {
     textures: PIXI.Texture[],
-    animationSpeed: number
+    animationSpeed: number,
+    reverseX?: boolean
   }
 }
 
@@ -11,13 +12,15 @@ interface IAnimations {
 export default class GameBody extends PIXI.AnimatedSprite {
   private _app;
   private _animations;
+  private _currentAnimation;
 
   constructor(animations: IAnimations, app: PIXI.Application) {
-    
+
     // start animation
     const first = Object.keys(animations)[0];
     super(animations[first].textures);
     this.animationSpeed = animations[first].animationSpeed;
+    this._currentAnimation = first;
     this.play();
 
     this.addAnimation(animations);
@@ -34,7 +37,7 @@ export default class GameBody extends PIXI.AnimatedSprite {
 
     this.posCenter();
 
-    
+
   }
 
   posCenter() {
@@ -49,5 +52,26 @@ export default class GameBody extends PIXI.AnimatedSprite {
   playAnimation(name: string) {
     this.textures = this._animations[name].textures;
     this.animationSpeed = this._animations[name].animationSpeed;
+    this._currentAnimation = name;
+    
+    if (this._animations[name].reverseX !== undefined) {
+      if (this._animations[name].reverseX) {
+        if (this.scale.x > 0) this.scale.x *= -1;
+      } else {
+        if (this.scale.x < 0) this.scale.x *= -1;
+      }
+    } 
+
+    this.play();
+  }
+
+  onTick(...cb: ((delta: number) => void)[]) {
+    this._app.ticker.add(delta => {
+      [...cb].forEach(e => e(delta));
+    })
+  }
+
+  get animationName() {
+    return this._currentAnimation;
   }
 }

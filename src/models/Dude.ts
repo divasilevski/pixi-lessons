@@ -28,63 +28,46 @@ export default function Dude(app: PIXI.Application): void {
       textures: idleAnimationArray,
       animationSpeed: 0.1
     },
-    run: {
+    runRight: {
       textures: runAnimationArray,
-      animationSpeed: 0.2
+      animationSpeed: 0.2,
+      reverseX: false
+    },
+    runLeft: {
+      textures: runAnimationArray,
+      animationSpeed: 0.2,
+      reverseX: true
     }
   }
 
   // Create player
   const player: GameBody = new GameBody(animations, app);
 
-
-  let state: boolean[] = [true, false, false]
-
-  app.ticker.add(delta => {
+  player.onTick((delta) => {
     const speed = 5 * delta;
 
     if (Keyboard.isKeyDown('ArrowRight', 'KeyD')) {
-      if (!state[1]) {
-        player.textures = runAnimationArray;
-        player.play()
-        state[0] = false;
-        state[1] = true;
-        state[2] = false;
-        player.animationSpeed = 0.2
 
-        if (player.scale.x < 0) player.scale.x *= -1;
+      if (player.animationName != 'runRight') {
+        player.playAnimation('runRight');
       }
 
       player.x += speed;
 
     } else if (Keyboard.isKeyDown('ArrowLeft', 'KeyA')) {
-      if (!state[2]) {
-        player.textures = runAnimationArray;
-        player.play()
-        state[0] = false;
-        state[1] = false;
-        state[2] = true;
-        player.animationSpeed = 0.2
 
-        if (player.scale.x > 0) player.scale.x *= -1;
+      if (player.animationName != 'runLeft') {
+        player.playAnimation('runLeft');
       }
 
       player.x -= speed;
 
     } else {
-      if (!state[0]) {
-        player.textures = idleAnimationArray;
-        player.play();
-        state[0] = true;
-        state[1] = false;
-        state[2] = false;
-        player.animationSpeed = 0.1
-
+      if (player.animationName != 'idle') {
+        player.playAnimation('idle');
       }
     }
 
     Keyboard.update();
-  });
-
-
+  })
 }
