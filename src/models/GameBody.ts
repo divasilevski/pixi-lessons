@@ -1,11 +1,26 @@
 import * as PIXI from 'pixi.js';
 
+interface IAnimations {
+  [key: string]: {
+    textures: PIXI.Texture[],
+    animationSpeed: number
+  }
+}
+
+
 export default class GameBody extends PIXI.AnimatedSprite {
   private _app;
-  private _anims;
+  private _animations;
 
-  constructor(textures: PIXI.Texture[], app: PIXI.Application) {
-    super(textures);
+  constructor(animations: IAnimations, app: PIXI.Application) {
+    
+    // start animation
+    const first = Object.keys(animations)[0];
+    super(animations[first].textures);
+    this.animationSpeed = animations[first].animationSpeed;
+    this.play();
+
+    this.addAnimation(animations);
     this._app = app;
 
     // Start settings
@@ -19,7 +34,7 @@ export default class GameBody extends PIXI.AnimatedSprite {
 
     this.posCenter();
 
-    this.play();
+    
   }
 
   posCenter() {
@@ -27,11 +42,12 @@ export default class GameBody extends PIXI.AnimatedSprite {
     this.y = this._app.screen.height / 2;
   }
 
-  addAnimation(anims: { [key: string]: PIXI.Texture[] }) {
-    this._anims.push(anims);
+  addAnimation(anims: IAnimations) {
+    this._animations = Object.assign({}, anims, this._animations);
   }
 
-  playTexture() {
-    
+  playAnimation(name: string) {
+    this.textures = this._animations[name].textures;
+    this.animationSpeed = this._animations[name].animationSpeed;
   }
 }

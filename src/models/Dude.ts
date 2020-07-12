@@ -23,9 +23,19 @@ export default function Dude(app: PIXI.Application): void {
     idleAnimationArray.push(new PIXI.Texture(texture.baseTexture, rectangle2));
   }
 
+  const animations = {
+    idle: {
+      textures: idleAnimationArray,
+      animationSpeed: 0.1
+    },
+    run: {
+      textures: runAnimationArray,
+      animationSpeed: 0.2
+    }
+  }
+
   // Create player
-  const player: GameBody = new GameBody(idleAnimationArray, app);
-  player.animationSpeed = 0.1;
+  const player: GameBody = new GameBody(animations, app);
 
 
   let state: boolean[] = [true, false, false]
